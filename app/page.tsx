@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 
 // Данные примеров товаров
 const sampleProducts = [
@@ -64,7 +65,10 @@ const sampleProducts = [
 ];
 
 export default function Home() {
+  const router = useRouter();
   const [isFiltersOpen, setIsFiltersOpen] = useState(false);
+  const [isAIChatOpen, setIsAIChatOpen] = useState(false);
+  const [selectedProduct, setSelectedProduct] = useState(null);
   const [selectedFilters, setSelectedFilters] = useState({
     industry: '',
     pricing: '', 
@@ -82,6 +86,18 @@ export default function Home() {
   const applyFilters = () => {
     console.log('Применены фильтры:', selectedFilters);
     setIsFiltersOpen(false);
+  };
+
+  // Функция для открытия AI-чата
+  const openAIChat = (product: any, e: React.MouseEvent) => {
+    e.stopPropagation(); // Останавливаем всплытие события
+    setSelectedProduct(product);
+    setIsAIChatOpen(true);
+  };
+
+  // Функция для перехода на страницу товара
+  const goToProductPage = (productId: number) => {
+    router.push(`/product/${productId}`);
   };
 
   return (
@@ -146,7 +162,11 @@ export default function Home() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {sampleProducts.map((product) => (
-              <div key={product.id} className="bg-white rounded-xl shadow-lg hover:shadow-xl transition-shadow p-6">
+              <div 
+                key={product.id} 
+                onClick={() => goToProductPage(product.id)}
+                className="bg-white rounded-xl shadow-lg hover:shadow-xl transition-shadow p-6 cursor-pointer hover:border-2 hover:border-blue-200"
+              >
                 {/* Бейдж популярного */}
                 {product.isPopular && (
                   <div className="inline-block bg-yellow-100 text-yellow-800 text-xs font-semibold px-2 py-1 rounded-full mb-3">
@@ -184,8 +204,11 @@ export default function Home() {
                   <div className="text-lg font-bold text-gray-900">
                     {product.price}
                   </div>
-                  <button className="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-blue-700 transition-colors">
-                    🤖 Консультация
+                  <button 
+                    onClick={(e) => openAIChat(product, e)}
+                    className="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-blue-700 transition-colors"
+                  >
+                    🤖 AI консультация
                   </button>
                 </div>
               </div>
@@ -340,6 +363,59 @@ export default function Home() {
                 >
                   Сбросить всё
                 </button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* ПОПАП AI-ЧАТА */}
+        {isAIChatOpen && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+            <div className="bg-white rounded-xl w-full max-w-2xl max-h-[80vh] overflow-hidden">
+              <div className="flex justify-between items-center p-6 border-b">
+                <h3 className="text-xl font-semibold text-gray-900">
+                  🤖 Консультация по {selectedProduct?.name}
+                </h3>
+                <button 
+                  onClick={() => setIsAIChatOpen(false)}
+                  className="text-gray-500 hover:text-gray-700 text-2xl"
+                >
+                  ×
+                </button>
+              </div>
+              
+              <div className="p-6">
+                <div className="bg-gray-50 rounded-lg p-4 mb-4">
+                  <p className="text-gray-700">
+                    Здравствуйте! Я ваш AI-консультант по продукту "{selectedProduct?.name}". 
+                    Задайте мне любой вопрос о функциях, стоимости или внедрении.
+                  </p>
+                </div>
+                
+                <div className="space-y-4 mb-6">
+                  <div className="flex justify-end">
+                    <div className="bg-blue-100 rounded-lg p-3 max-w-[80%]">
+                      <p>Какие основные функции есть в этом решении?</p>
+                    </div>
+                  </div>
+                  
+                  <div className="flex justify-start">
+                    <div className="bg-gray-100 rounded-lg p-3 max-w-[80%]">
+                      <p>Продукт "{selectedProduct?.name}" включает автоматизацию процессов, аналитику и интеграцию с популярными системами. Конкретный набор функций зависит от выбранного тарифа.</p>
+                    </div>
+                  </div>
+                </div>
+                
+                <div className="flex gap-2">
+                  <input 
+                    type="text" 
+                    placeholder="Задайте ваш вопрос..."
+                    className="flex-1 p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                  />
+                  <button className="bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors">
+                    Отправить
+                  </button>
+                </div>
               </div>
             </div>
           </div>
