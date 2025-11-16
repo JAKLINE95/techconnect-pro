@@ -151,6 +151,22 @@ export default function Home() {
           </div>
         </div>
 
+        {/* УТП - ПРЕИМУЩЕСТВА (ДОБАВЛЕНО ПЕРЕД КАРТОЧКАМИ) */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
+          <div className="bg-white rounded-xl p-8 shadow-lg text-center">
+            <h3 className="font-semibold text-gray-900 mb-3 text-lg">AI-консультант для каждого продукта</h3>
+            <p className="text-gray-600">Получите персональную консультацию по любому решению</p>
+          </div>
+          <div className="bg-white rounded-xl p-8 shadow-lg text-center">
+            <h3 className="font-semibold text-gray-900 mb-3 text-lg">Сравнение решений</h3>
+            <p className="text-gray-600">Параллельное сравнение для принятия обоснованных решений</p>
+          </div>
+          <div className="bg-white rounded-xl p-8 shadow-lg text-center">
+            <h3 className="font-semibold text-gray-900 mb-3 text-lg">Проверенные поставщики</h3>
+            <p className="text-gray-600">Только качественные B2B-решения с реальными отзывами</p>
+          </div>
+        </div>
+
         {/* СЕТКА КАРТОЧЕК ТОВАРОВ */}
         <div className="mb-16">
           <div className="flex justify-between items-center mb-8">
@@ -167,12 +183,14 @@ export default function Home() {
                 onClick={() => goToProductPage(product.id)}
                 className="bg-white rounded-xl shadow-lg hover:shadow-xl transition-shadow p-6 cursor-pointer hover:border-2 hover:border-blue-200"
               >
-                {/* Бейдж популярного */}
-                {product.isPopular && (
-                  <div className="inline-block bg-yellow-100 text-yellow-800 text-xs font-semibold px-2 py-1 rounded-full mb-3">
-                    Популярное
-                  </div>
-                )}
+                {/* Фиксированное место для бейджа */}
+                <div className="h-6 mb-3">
+                  {product.isPopular && (
+                    <div className="inline-block bg-yellow-100 text-yellow-800 text-xs font-semibold px-2 py-1 rounded-full">
+                      Популярное
+                    </div>
+                  )}
+                </div>
                 
                 {/* Категория */}
                 <div className="text-sm text-blue-600 font-medium mb-2">
@@ -208,7 +226,7 @@ export default function Home() {
                     onClick={(e) => openAIChat(product, e)}
                     className="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-blue-700 transition-colors"
                   >
-                    🤖 AI консультация
+                    AI консультация
                   </button>
                 </div>
               </div>
@@ -374,7 +392,7 @@ export default function Home() {
             <div className="bg-white rounded-xl w-full max-w-2xl max-h-[80vh] overflow-hidden">
               <div className="flex justify-between items-center p-6 border-b">
                 <h3 className="text-xl font-semibold text-gray-900">
-                  🤖 Консультация по {selectedProduct?.name}
+                  AI консультация по {selectedProduct?.name}
                 </h3>
                 <button 
                   onClick={() => setIsAIChatOpen(false)}
@@ -420,22 +438,6 @@ export default function Home() {
             </div>
           </div>
         )}
-
-        {/* Преимущества БЕЗ иконок */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
-          <div className="bg-white rounded-xl p-8 shadow-lg text-center">
-            <h3 className="font-semibold text-gray-900 mb-3 text-lg">AI-консультант для каждого продукта</h3>
-            <p className="text-gray-600">Получите персональную консультацию по любому решению</p>
-          </div>
-          <div className="bg-white rounded-xl p-8 shadow-lg text-center">
-            <h3 className="font-semibold text-gray-900 mb-3 text-lg">Сравнение решений</h3>
-            <p className="text-gray-600">Параллельное сравнение для принятия обоснованных решений</p>
-          </div>
-          <div className="bg-white rounded-xl p-8 shadow-lg text-center">
-            <h3 className="font-semibold text-gray-900 mb-3 text-lg">Проверенные поставщики</h3>
-            <p className="text-gray-600">Только качественные B2B-решения с реальными отзывами</p>
-          </div>
-        </div>
 
         <div className="bg-white rounded-2xl shadow-xl p-8 text-center">
           <h2 className="text-3xl font-bold text-gray-900 mb-4">
