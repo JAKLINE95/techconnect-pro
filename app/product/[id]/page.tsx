@@ -99,12 +99,67 @@ const reviewsData = [
   }
 ];
 
+// Похожие CRM системы
+const similarProducts = [
+  {
+    id: 2,
+    name: "CRM Битрикс24",
+    description: "Комплексная платформа для управления бизнесом",
+    category: "Маркетинг и продажи",
+    price: "от 1 990 ₽/мес",
+    rating: 4.7,
+    reviews: 215,
+    isPopular: true
+  },
+  {
+    id: 3,
+    name: "AmoCRM",
+    description: "CRM для интернет-продаж и маркетинга",
+    category: "Маркетинг и продажи",
+    price: "от 1 790 ₽/мес",
+    rating: 4.6,
+    reviews: 187,
+    isPopular: true
+  },
+  {
+    id: 4,
+    name: "Мегаплан",
+    description: "Управление проектами и клиентами",
+    category: "Маркетинг и продажи",
+    price: "от 1 290 ₽/мес",
+    rating: 4.4,
+    reviews: 92
+  },
+  {
+    id: 5,
+    name: "SalesapCRM",
+    description: "CRM для автоматизации воронки продаж",
+    category: "Маркетинг и продажи",
+    price: "от 2 490 ₽/мес",
+    rating: 4.8,
+    reviews: 134
+  }
+];
+
 export default function ProductPage() {
   const [isAIChatOpen, setIsAIChatOpen] = useState(false);
   const [selectedVideo, setSelectedVideo] = useState(1);
   const [isFavorite, setIsFavorite] = useState(false);
   const [selectedReview, setSelectedReview] = useState(null);
+  const [selectedProduct, setSelectedProduct] = useState(null);
   const router = useRouter();
+
+  // Функция для открытия AI-чата
+  const openAIChat = (product, e) => {
+    e.stopPropagation();
+    setSelectedProduct(product);
+    setIsAIChatOpen(true);
+  };
+
+  // Функция для перехода на страницу товара
+  const goToProductPage = (productId) => {
+    router.push(`/product/${productId}`);
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
@@ -131,9 +186,9 @@ export default function ProductPage() {
         </nav>
 
         <div className="grid grid-cols-1 xl:grid-cols-4 gap-8">
-          {/* Левая колонка - Видео и действия (шире) */}
+          {/* Левая колонка - Видео и описание продукта */}
           <div className="xl:col-span-3 space-y-6">
-            {/* Видео блок - шире */}
+            {/* Видео блок */}
             <div className="bg-white rounded-xl shadow-sm border p-6">
               <div className="flex justify-between items-center mb-6">
                 <h3 className="text-xl font-semibold text-gray-900">Видео-презентация</h3>
@@ -151,7 +206,7 @@ export default function ProductPage() {
                 </button>
               </div>
 
-              {/* Горизонтальный layout видео - шире */}
+              {/* Горизонтальный layout видео */}
               <div className="flex gap-6">
                 {/* Миниатюры слева */}
                 <div className="flex flex-col gap-3 w-40">
@@ -180,7 +235,7 @@ export default function ProductPage() {
                   ))}
                 </div>
 
-                {/* Основное видео - шире */}
+                {/* Основное видео */}
                 <div className="flex-1">
                   <div className="bg-gray-100 rounded-lg aspect-video flex items-center justify-center">
                     <div className="text-center text-gray-600">
@@ -227,79 +282,30 @@ export default function ProductPage() {
                   <span>Демо-доступ</span>
                 </button>
               </div>
-
-              {/* Блок отзывов с горизонтальным скроллом */}
-              <div className="mt-8 pt-6 border-t border-gray-200">
-                <div className="flex justify-between items-center mb-6">
-                  <h3 className="text-xl font-semibold text-gray-900">Отзывы клиентов</h3>
-                  <span className="text-sm text-gray-500">{reviewsData.length} отзывов</span>
-                </div>
-
-                <div className="flex space-x-4 overflow-x-auto pb-4 -mx-2 px-2 scrollbar-hide">
-                  {reviewsData.map((review) => (
-                    <div
-                      key={review.id}
-                      onClick={() => setSelectedReview(review)}
-                      className="flex-shrink-0 w-80 bg-white border border-gray-200 rounded-lg p-4 cursor-pointer hover:shadow-md transition-shadow"
-                    >
-                      <div className="flex items-center justify-between mb-3">
-                        <div>
-                          <div className="font-semibold text-gray-900">{review.name}</div>
-                          <div className="text-sm text-gray-500">{review.company}</div>
-                        </div>
-                        <div className="flex items-center gap-1">
-                          <div className="flex text-yellow-400">
-                            {'★'.repeat(review.rating)}
-                          </div>
-                          <span className="text-sm text-gray-500">{review.date}</span>
-                        </div>
-                      </div>
-                      <p className="text-gray-700 line-clamp-3">{review.excerpt}</p>
-                      <div className="mt-3 text-sm text-blue-600 font-medium">
-                        Читать полностью →
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
             </div>
 
-            {/* Здесь будут похожие товары */}
+            {/* Описание продукта под видео */}
             <div className="bg-white rounded-xl shadow-sm border p-6">
-              <h3 className="text-xl font-semibold text-gray-900 mb-6">Похожие товары</h3>
-              <p className="text-center text-gray-500 py-8">
-                Здесь будут карточки похожих товаров
-              </p>
-            </div>
-          </div>
-
-          {/* Правая колонка - Информация о продукте со скроллингом */}
-          <div className="xl:col-span-1">
-            <div className="bg-white rounded-xl shadow-sm border p-6 sticky top-8 max-h-[calc(100vh-4rem)] overflow-y-auto">
               <div className="mb-6">
                 <h1 className="text-2xl font-bold text-gray-900 mb-2">
                   {productData.name}
                 </h1>
-                <div className="flex items-center gap-4">
+                {/* Рейтинг и отзывы */}
+                <div className="flex items-center gap-4 mb-4">
                   <div className="flex items-center gap-2">
                     <div className="flex text-yellow-400">
                       {'★'.repeat(5)}
                     </div>
                     <span className="text-lg font-semibold text-gray-900">{productData.rating}</span>
-                    <span className="text-gray-500">({productData.reviews})</span>
+                    <span className="text-gray-500">({productData.reviews} отзывов)</span>
                   </div>
                 </div>
+                <p className="text-gray-600 leading-relaxed">
+                  {productData.fullDescription}
+                </p>
               </div>
 
-              <p className="text-gray-600 mb-6 leading-relaxed">
-                {productData.fullDescription}
-              </p>
-
-              <div className="text-2xl font-bold text-gray-900 mb-6 border-t pt-6">
-                {productData.price}
-              </div>
-
-              {/* Ключевые возможности - под описанием продукта */}
+              {/* Ключевые возможности */}
               <div className="mb-6">
                 <h3 className="text-lg font-semibold text-gray-900 mb-4">Ключевые возможности</h3>
                 <div className="space-y-2">
@@ -311,7 +317,7 @@ export default function ProductPage() {
                 </div>
               </div>
 
-              {/* Технические детали - под ключевыми возможностями */}
+              {/* Технические детали */}
               <div className="mb-6">
                 <h3 className="text-lg font-semibold text-gray-900 mb-4">Технические детали</h3>
                 <div className="space-y-3">
@@ -329,11 +335,112 @@ export default function ProductPage() {
                   </div>
                 </div>
               </div>
+            </div>
 
-              {/* Поставщик - просто текст без акцента */}
-              <div className="pt-6 border-t border-gray-200">
-                <div className="text-sm text-gray-600">Поставщик</div>
-                <div className="text-gray-900">{productData.vendor}</div>
+            {/* Похожие товары */}
+            <div className="bg-white rounded-xl shadow-sm border p-6">
+              <h3 className="text-xl font-semibold text-gray-900 mb-6">Похожие CRM системы</h3>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {similarProducts.map((product) => (
+                  <div 
+                    key={product.id} 
+                    onClick={() => goToProductPage(product.id)}
+                    className="bg-white rounded-xl shadow-lg hover:shadow-xl transition-shadow p-6 cursor-pointer hover:border-2 hover:border-blue-200 border border-gray-100"
+                  >
+                    {/* Фиксированное место для бейджа */}
+                    <div className="h-6 mb-3">
+                      {product.isPopular && (
+                        <div className="inline-block bg-yellow-100 text-yellow-800 text-xs font-semibold px-2 py-1 rounded-full">
+                          Популярное
+                        </div>
+                      )}
+                    </div>
+                    
+                    {/* Категория */}
+                    <div className="text-sm text-blue-600 font-medium mb-2">
+                      {product.category}
+                    </div>
+                    
+                    {/* Название */}
+                    <h3 className="text-xl font-semibold text-gray-900 mb-3">
+                      {product.name}
+                    </h3>
+                    
+                    {/* Описание */}
+                    <p className="text-gray-600 mb-4 text-sm leading-relaxed">
+                      {product.description}
+                    </p>
+                    
+                    {/* Рейтинг */}
+                    <div className="flex items-center gap-2 mb-4">
+                      <div className="flex text-yellow-400">
+                        {'★'.repeat(5)}
+                      </div>
+                      <span className="text-sm text-gray-600">
+                        {product.rating} ({product.reviews} отзывов)
+                      </span>
+                    </div>
+                    
+                    {/* Цена и кнопка */}
+                    <div className="flex items-center justify-between">
+                      <div className="text-lg font-bold text-gray-900">
+                        {product.price}
+                      </div>
+                      <button 
+                        onClick={(e) => openAIChat(product, e)}
+                        className="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-blue-700 transition-colors"
+                      >
+                        AI консультация
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* Правая колонка - Отзывы вертикальным скроллингом */}
+          <div className="xl:col-span-1">
+            <div className="bg-white rounded-xl shadow-sm border p-6 sticky top-8 max-h-[calc(100vh-4rem)] overflow-y-auto">
+              <div className="flex justify-between items-center mb-6">
+                <h3 className="text-xl font-semibold text-gray-900">Отзывы клиентов</h3>
+              </div>
+
+              {/* Общий рейтинг */}
+              <div className="flex items-center gap-2 mb-6 p-4 bg-gray-50 rounded-lg">
+                <div className="flex text-yellow-400 text-xl">
+                  {'★'.repeat(5)}
+                </div>
+                <span className="text-lg font-semibold text-gray-900">{productData.rating}</span>
+                <span className="text-gray-500">({productData.reviews})</span>
+              </div>
+
+              <div className="space-y-4">
+                {reviewsData.map((review) => (
+                  <div
+                    key={review.id}
+                    onClick={() => setSelectedReview(review)}
+                    className="bg-gray-50 border border-gray-200 rounded-lg p-4 cursor-pointer hover:shadow-md transition-shadow"
+                  >
+                    <div className="mb-3">
+                      <div className="font-semibold text-gray-900 truncate">{review.name}</div>
+                      <div className="text-sm text-gray-500 truncate mb-2">{review.company}</div>
+                      <div className="flex items-center gap-2">
+                        <div className="flex text-yellow-400">
+                          {'★'.repeat(review.rating)}
+                        </div>
+                        <span className="text-sm text-gray-500">{review.date}</span>
+                      </div>
+                    </div>
+                    <p className="text-gray-700 line-clamp-2">
+                      {review.excerpt}
+                    </p>
+                    <div className="mt-3 text-sm text-blue-600 font-medium">
+                      Читать полностью →
+                    </div>
+                  </div>
+                ))}
               </div>
             </div>
           </div>
@@ -387,11 +494,9 @@ export default function ProductPage() {
               </button>
             </div>
             <div className="p-6">
-              <div className="flex items-center justify-between mb-4">
-                <div>
-                  <div className="text-lg font-semibold text-gray-900">{selectedReview.name}</div>
-                  <div className="text-sm text-gray-500">{selectedReview.company}</div>
-                </div>
+              <div className="mb-4">
+                <div className="text-lg font-semibold text-gray-900 truncate">{selectedReview.name}</div>
+                <div className="text-sm text-gray-500 truncate mb-2">{selectedReview.company}</div>
                 <div className="flex items-center gap-2">
                   <div className="flex text-yellow-400">
                     {'★'.repeat(selectedReview.rating)}
