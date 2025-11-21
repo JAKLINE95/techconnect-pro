@@ -51,10 +51,59 @@ const videoPreviews = [
   }
 ];
 
+const reviewsData = [
+  {
+    id: 1,
+    name: "Анна Петрова",
+    company: "ООО 'Вектор'",
+    rating: 5,
+    date: "15.11.2024",
+    excerpt: "Внедрили CRM за 2 дня! Отличная техподдержка, помогли настроить все процессы. Автоматизация сэкономила нам 20 часов в неделю.",
+    fullReview: "Мы искали CRM-систему несколько месяцев и остановились на ProSales. Внедрение заняло всего 2 дня - техподдержка работала практически круглосуточно. Особенно хочу отметить удобство мобильного приложения - менеджеры могут работать из anywhere. За первый месяц автоматизировали 80% рутинных задач, что сэкономило примерно 20 рабочих часов в неделю. Рекомендую!"
+  },
+  {
+    id: 2,
+    name: "Иван Сидоров",
+    company: "ИП Сидоров",
+    rating: 4,
+    date: "10.11.2024",
+    excerpt: "Хорошее соотношение цены и качества. Интеграция с Telegram очень упростила коммуникацию.",
+    fullReview: "Как индивидуальный предприниматель, я долго искал недорогое, но функциональное решение. ProSales полностью оправдал ожидания. Особенно порадовала интеграция с Telegram - все уведомления приходят сразу в мессенджер, не нужно постоянно заходить в систему. Из минусов - иногда подвисает при большом количестве одновременных операций, но техподдержка всегда помогает решить вопросы."
+  },
+  {
+    id: 3,
+    name: "Мария Козлова",
+    company: "Студия дизайна 'АртВзгляд'",
+    rating: 5,
+    date: "05.11.2024",
+    excerpt: "Отличная аналитика! Теперь видим все метрики продаж в реальном времени.",
+    fullReview: "Мы дизайн-студия, и раньше вели учет в таблицах. ProSales полностью изменил наш подход к продажам. Аналитика в реальном времени позволяет сразу видеть эффективность каждого менеджера, воронку продаж и конверсию. Внедрили SCOR-метрики - теперь точно понимаем, где теряем клиентов. За 2 месяца увеличили конверсию на 15%!"
+  },
+  {
+    id: 4,
+    name: "Дмитрий Волков",
+    company: "ООО 'ТехноПрофи'",
+    rating: 4,
+    date: "01.11.2024",
+    excerpt: "Удобный интерфейс, сотрудники быстро освоили. Email-рассылки работают стабильно.",
+    fullReview: "Внедряли систему для отдела продаж из 8 человек. Интерфейс интуитивно понятный - обучение заняло всего 1 день. Очень довольны функционалом email-рассылок: шаблоны легко настраиваются, статистика открытий и переходов помогает оптимизировать контент. Единственное, хотелось бы больше готовых интеграций с другими сервисами."
+  },
+  {
+    id: 5,
+    name: "Елена Смирнова",
+    company: "Центр обучения 'Профи'",
+    rating: 5,
+    date: "28.10.2024",
+    excerpt: "Автоворонки просто супер! Автоматизировали весь процесс ведения клиентов.",
+    fullReview: "Работаем в сфере образования, у нас длинный цикл продаж. Автоворонки в ProSales позволили автоматизировать все этапы: от первого контакта до закрытия сделки. Настроили триггерные письма, напоминания менеджерам, автоматические задачи. Клиенты больше не теряются, каждый получает своевременную коммуникацию. Результат: на 30% больше закрытых сделок за месяц!"
+  }
+];
+
 export default function ProductPage() {
   const [isAIChatOpen, setIsAIChatOpen] = useState(false);
   const [selectedVideo, setSelectedVideo] = useState(1);
   const [isFavorite, setIsFavorite] = useState(false);
+  const [selectedReview, setSelectedReview] = useState(null);
   const router = useRouter();
 
   return (
@@ -179,12 +228,48 @@ export default function ProductPage() {
                 </button>
               </div>
 
-              {/* Место для отзывов и вопросов */}
+              {/* Блок отзывов с горизонтальным скроллом */}
               <div className="mt-8 pt-6 border-t border-gray-200">
-                <p className="text-center text-gray-500">
-                  Здесь будут отзывы и вопросы о продукте
-                </p>
+                <div className="flex justify-between items-center mb-6">
+                  <h3 className="text-xl font-semibold text-gray-900">Отзывы клиентов</h3>
+                  <span className="text-sm text-gray-500">{reviewsData.length} отзывов</span>
+                </div>
+
+                <div className="flex space-x-4 overflow-x-auto pb-4 -mx-2 px-2 scrollbar-hide">
+                  {reviewsData.map((review) => (
+                    <div
+                      key={review.id}
+                      onClick={() => setSelectedReview(review)}
+                      className="flex-shrink-0 w-80 bg-white border border-gray-200 rounded-lg p-4 cursor-pointer hover:shadow-md transition-shadow"
+                    >
+                      <div className="flex items-center justify-between mb-3">
+                        <div>
+                          <div className="font-semibold text-gray-900">{review.name}</div>
+                          <div className="text-sm text-gray-500">{review.company}</div>
+                        </div>
+                        <div className="flex items-center gap-1">
+                          <div className="flex text-yellow-400">
+                            {'★'.repeat(review.rating)}
+                          </div>
+                          <span className="text-sm text-gray-500">{review.date}</span>
+                        </div>
+                      </div>
+                      <p className="text-gray-700 line-clamp-3">{review.excerpt}</p>
+                      <div className="mt-3 text-sm text-blue-600 font-medium">
+                        Читать полностью →
+                      </div>
+                    </div>
+                  ))}
+                </div>
               </div>
+            </div>
+
+            {/* Здесь будут похожие товары */}
+            <div className="bg-white rounded-xl shadow-sm border p-6">
+              <h3 className="text-xl font-semibold text-gray-900 mb-6">Похожие товары</h3>
+              <p className="text-center text-gray-500 py-8">
+                Здесь будут карточки похожих товаров
+              </p>
             </div>
           </div>
 
@@ -282,6 +367,50 @@ export default function ProductPage() {
                 className="w-full bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors"
               >
                 Понятно
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Review Detail Modal */}
+      {selectedReview && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-xl w-full max-w-2xl border shadow-lg max-h-[80vh] overflow-y-auto">
+            <div className="flex justify-between items-center p-6 border-b sticky top-0 bg-white">
+              <h3 className="text-xl font-semibold text-gray-900">Отзыв клиента</h3>
+              <button 
+                onClick={() => setSelectedReview(null)}
+                className="text-gray-500 hover:text-gray-700 text-2xl"
+              >
+                ×
+              </button>
+            </div>
+            <div className="p-6">
+              <div className="flex items-center justify-between mb-4">
+                <div>
+                  <div className="text-lg font-semibold text-gray-900">{selectedReview.name}</div>
+                  <div className="text-sm text-gray-500">{selectedReview.company}</div>
+                </div>
+                <div className="flex items-center gap-2">
+                  <div className="flex text-yellow-400">
+                    {'★'.repeat(selectedReview.rating)}
+                  </div>
+                  <span className="text-sm text-gray-500">{selectedReview.date}</span>
+                </div>
+              </div>
+              <div className="prose prose-gray max-w-none">
+                <p className="text-gray-700 leading-relaxed whitespace-pre-line">
+                  {selectedReview.fullReview}
+                </p>
+              </div>
+            </div>
+            <div className="p-6 border-t">
+              <button 
+                onClick={() => setSelectedReview(null)}
+                className="w-full bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors"
+              >
+                Закрыть
               </button>
             </div>
           </div>
